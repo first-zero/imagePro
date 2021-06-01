@@ -11,6 +11,7 @@
 #include <QLabel>
 #include <QPixmap>
 #include <QToolButton>
+#include <QPushButton>
 #include <QToolBar>
 
 #include "ui_mainwindow.h"
@@ -76,23 +77,34 @@ void MainWindow::init() {
 }
 
 void MainWindow::createToolDock() {
-    dock_tool = new QDockWidget("toolbar", this);
+    dock_tool = new QDockWidget("绘图栏", this);
 //    dock_tool = new QDockWidget("工具箱", this);
     QWidget *widget = new QWidget(dock_tool);
     QToolBar *toolBar = new QToolBar("toolbar");
-    QToolButton* button1 = new QToolButton();
-    QToolButton* button2 = new QToolButton();
-//    buttton1->setIcon(QIcon("icon1"));
-    button1->setArrowType(Qt::LeftArrow);
-    button2->setArrowType(Qt::NoArrow);
+//    QToolButton* button1 = new QToolButton();
+//    QToolButton* button2 = new QToolButton();
+//    button1->setArrowType(Qt::LeftArrow);
+//    button2->setArrowType(Qt::RightArrow);
 //    buttton2->setIcon(new QIcon("icon2"));
-    button1->setFixedSize(20,20);
-    button2->setFixedSize(20,20);
-
-    toolBar->addWidget(button1);
-    toolBar->addWidget(button2);
-
+    QPushButton* button1 = new QPushButton("button1", widget);
+    QPushButton* button2 = new QPushButton("button2", widget);
+    button1->setToolTip("button1");
+    button2->setToolTip("button1");
+    button1->setFixedSize(60,40);
+    button2->setFixedSize(60,40);
+//    QGridLayout *gridlay = new QGridLayout(widget);
+//    gridlay->addWidget(button1, 0, 0, 1, 1);
+//    gridlay->addWidget(button2, 0, 1, 1, 1);
+    QHBoxLayout *hlay = new QHBoxLayout(widget);
+    hlay->addWidget(button1);
+    hlay->addWidget(button2);
+    widget->setLayout(hlay);
+//    toolBar->addWidget(button1);
+//    toolBar->addWidget(button2);
     addToolBar(toolBar);
+
+    toolBar->addWidget(widget);
+//    dock_tool->setWidget(widget);
 }
 void MainWindow::createImageWidget() {
     // 没有this，则不是绑定在mainWindow上
@@ -102,6 +114,7 @@ void MainWindow::createImageWidget() {
 //    dock_image->setGeometry(500, 0, 400, 400);
 //    dock_image->setFixedWidth(200);
 //    dock_image->setFixedHeight(200);
+//    dock_image->setMinimumHeight(500);
 
 
     imageWidget = new ImageWidget(dock_image, this);
@@ -138,7 +151,6 @@ void MainWindow::createOutputDock() {
     dock_output->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
     dock_output->setFixedWidth(this->size().width());
-    dock_image->setFixedHeight(200);
 
 
 //    dock_output->resize(QSize(200, 300));
@@ -150,7 +162,6 @@ void MainWindow::createOutputDock() {
 
 //    outputEdit->resize(QSize(200, 200));
     outputEdit->resize(QSize(200,300));
-//    outputEdit->setPlaceholderText("dsfdafssssssssss\n\nsdssds\n\n\n\n\n\n\n\n\n\n\n\nssdsdds");
     outputEdit->insertPlainText("dsfdafssssssssss\n\ns\n\nssdsdds");
     vlayout->addWidget(outputEdit);
 
