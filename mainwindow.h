@@ -21,13 +21,13 @@ public:
 private:
     Ui::MainWindow *ui;
     MenuBar* menuBar;
-    QDockWidget* dock_image, *dock_output, *dock_geom;
+    QDockWidget* dock_image, *dock_output, *dock_geom, *dock_tool;
     ImageWidget *imageWidget;
     void init();
-    void CreateImageWidget();
+    void createImageWidget();
     void createOutputDock();
     void createGemoDock();
-
+    void createToolDock();
 };
 
 #endif // MAINWINDOW_H

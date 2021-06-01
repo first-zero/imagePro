@@ -7,6 +7,6 @@ Geom::Geom(QWidget* parent, MainWindow* win) : QDockWidget(parent) {
 Geom::~Geom() {
 
 }
-void Gemo::init() {
+void Geom::init() {
 
 }
