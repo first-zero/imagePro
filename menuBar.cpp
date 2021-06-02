@@ -1,7 +1,17 @@
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1600)
+# pragma execution_character_set("utf-8")
+#endif
+
 #include <QWidget>
 #include <QMenu>
 #include "mainwindow.h"
 #include "MenuBar.h"
+#include <QFile>
+#include <QFileDialog>
+#include <QImage>
+#include <iostream>
+#include <QMessageBox>
+#include <QToolBar>
 
 using namespace  std;
 MenuBar::MenuBar(QWidget* parent, MainWindow* win) :
@@ -12,17 +22,116 @@ MenuBar::MenuBar(QWidget* parent, MainWindow* win) :
 }
 
 void MenuBar::init() {
-    file = new QMenu();
-    file->setTitle("文件");
+    menu_file = new QMenu();
+    menu_file->setTitle("文件");
+    toolbar = new QToolBar("toolbar");
 
-    fileOpen = new QAction(QString("打开"));
+    act_file_new = new QAction(QString("新建"));
+    act_file_open = new QAction(QString("打开"));
+    act_file_save = new QAction(QString("保存"));
+    act_file_saveAs = new QAction(QString("保存为"));
 
-    this->addMenu(file);
-    file->addAction(fileOpen);
-//    fileOpen->addAction("sdd");
+    this->addMenu(menu_file);
+    menu_file->addAction(act_file_new);
+    menu_file->addAction(act_file_open);
+    menu_file->addAction(act_file_save);
+    menu_file->addAction(act_file_saveAs);
+
+    connect(act_file_open, SIGNAL(triggered()), this, SLOT(fileOpen()));
+    connect(act_file_new, &QAction::triggered, this, &MenuBar::fileNew);
+    connect(act_file_save, &QAction::triggered, this, &MenuBar::fileSave);
+    connect(act_file_saveAs, &QAction::triggered, this, &MenuBar::fileSaveAs);
+}
+
+void MenuBar::fileNew() {
+    if(!checkSave()) {
+        mainWindow->insertToOutputEdit(tr("取消fileNew操作"));
+        return;
+    }
+
+    fileName.clear();
+    QImage img = QImage(600, 600, QImage::Format_RGB888);
+    img.fill(Qt::white);
+    mainWindow->setImage(img);
+
+
+}
+void MenuBar::fileOpen() {
+
+    // 如果选择取消save,什么都不做
+    if(!checkSave())
+        return;
+
+    fileName = QFileDialog::getOpenFileName(this,
+        tr("Open Image"), "/work/csz/imagePro",
+        tr("Image Files(*.png *.jpg *bmp)"));
+    if(fileName.isEmpty()) {
+        mainWindow->insertToOutputEdit(tr("文件名为空，读取失败"));
+        return;
+    }
+//    if(file.open(QIODevice::ReadOnly))
+//    {
+//           QByteArray byteArray  = file.readAll();
+//           std::vector<char> data(byteArray.data(),byteArray.data()+ byteArray.size());
+//           src = cv::imdecode(cv::Mat(data),1);
+//           file.close();
+//     }
+//    if (src.empty()) {
+//        QMessageBox::information(this, tr("错误"), tr("打开图像失败!"));
+//    }
+
+    image = QImage();
+    image.load(fileName);
+    if(image.data_ptr() == nullptr) {
+        QMessageBox::information(this, tr("错误"), tr("打开图像失败！"));
+    }
+    mainWindow->setImage(image);
+
+    mainWindow->insertToOutputEdit(QString("open file, file path is %1").arg(fileName));
+//    mainWindow->insertToOutputEdit(fileName);
+
+
+}
+
+void MenuBar::fileSave() {
+    if(fileName.isEmpty()) {
+        QString path = QFileDialog::getSaveFileName(this, tr("Save Image"), ".", tr("Images(*.jpg *.png *.bmp)"));
+        if(!path.isEmpty()) {
+            QImage image = mainWindow->getImage();
+            image.save(path);
+            mainWindow->insertToOutputEdit(tr("保存图像成功，路径为：%1").arg(path));
+            fileName = path;
+
+            mainWindow->setImage(image);
+        }
+    }
+    else {
+        QImage img = mainWindow->getImage();
+        img.save(fileName);
+        mainWindow->insertToOutputEdit(tr("保存图像成功，无需更改路径，路径为：%1").arg(fileName));
+        mainWindow->setImage(image);
+
+    }
+
+}
+
+void MenuBar::fileSaveAs() {
+    QString path = QFileDialog::getSaveFileName(this, tr("save Image as"), "/work/csz/imagePro", tr("Images(*.jpg *.png *.bmp)"));
+    if(!path.isEmpty()) {
+        QImage image = mainWindow->getImage();
+        image.save(path);
+        mainWindow->insertToOutputEdit(tr("保存图像成功，更新路径为：%1").arg(path));
+        fileName = path;
+        image.load(path);
+        mainWindow->setImage(image);
+    }
+
 }
 
 
+bool MenuBar::checkSave() {
+    return true;
+}
 MenuBar::~MenuBar() {
 
 }

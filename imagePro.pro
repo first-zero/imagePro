@@ -24,18 +24,29 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
+INCLUDEPATH += \
+D:\openCV\build\include\opencv \
+D:\openCV\build\include\opencv2 \
+D:\openCV\build\include
+
+LIBS += D:\openCV\build\x64\vc14\lib\opencv_world3414d.lib
+LIBS += D:\openCV\build\x64\vc14\lib\opencv_world3414.lib
+
+
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
     MenuBar.cpp \
     imagewidget.cpp \
-    geom.cpp
+    geom.cpp \
+    imagechange.cpp
 
 HEADERS += \
         mainwindow.h \
     MenuBar.h \
     imagewidget.h \
-    geom.h
+    geom.h \
+    imagechange.h
 
 FORMS += \
         mainwindow.ui
