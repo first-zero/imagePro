@@ -30,7 +30,6 @@ private:
     ImageWidget *imageWidget;
     QTextEdit * outputEdit;
     QImage* image;
-
     void init();
     void createImageWidget();
     void createOutputDock();

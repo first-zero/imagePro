@@ -75,6 +75,7 @@ void MainWindow::init() {
 void MainWindow::createToolDock() {
     dock_tool = new QDockWidget("绘图栏", this);
 //    dock_tool = new QDockWidget("工具箱", this);
+
     QWidget *widget = new QWidget(dock_tool);
 
     QPushButton* button1 = new QPushButton("button1", widget);
@@ -157,16 +158,19 @@ void MainWindow::createOutputDock() {
     dock_output->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
 //    int wid = this->size().width();
-    dock_output->setFixedWidth(this->size().width());
-    dock_output->setMinimumHeight(150);
+//    dock_output->setFixedWidth(this->size().width());
+    dock_output->setMinimumHeight(120);
     dock_output->setMaximumHeight(300);
-    dock_output->setFixedHeight(200);
+//    dock_output->setFixedHeight(200);
 
     outputEdit = new QTextEdit();
+    outputEdit->setReadOnly(true);
     outputEdit->setParent(dock_output);
 
-    outputEdit->resize(QSize(200,200));
-
+    outputEdit->resize(QSize(120,150));
+    dock_output->resize(120, 200);
+//    dock_output Sizehint()
+//    outputEdit->setFixedHeight(150);
 
 //    QScrollArea* outputScrollArea = new QScrollArea(dock_output);
 //    outputScrollArea->setBackgro6undRole(QPalette::Highlight);
@@ -174,7 +178,6 @@ void MainWindow::createOutputDock() {
 //    outputScrollArea->setWidget(outputEdit);
 
     insertToOutputEdit("dsfda");
-//    outputEdit->insertPlainText("insert again");
     insertToOutputEdit("insert again");
 
     // 尝试
@@ -191,9 +194,9 @@ void MainWindow::createGemoDock() {
     dock_geom->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     dock_image->setFeatures(QDockWidget::AllDockWidgetFeatures);
 
-
-    dock_geom->setFixedWidth(400);
-    dock_geom->setFixedHeight(400);
+// 设定 fixedwidth 就无法手动拖拽窗口大小
+//    dock_geom->setFixedWidth(400);
+//    dock_geom->setFixedHeight(400);
     QGridLayout *gridLay = new QGridLayout(dock_geom);
 
 

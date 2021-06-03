@@ -12,6 +12,8 @@
 #include <iostream>
 #include <QMessageBox>
 #include <QToolBar>
+#include <QHBoxLayout>
+#include <QPushButton>
 
 using namespace  std;
 MenuBar::MenuBar(QWidget* parent, MainWindow* win) :
@@ -24,18 +26,45 @@ MenuBar::MenuBar(QWidget* parent, MainWindow* win) :
 void MenuBar::init() {
     menu_file = new QMenu();
     menu_file->setTitle("文件");
-    toolbar = new QToolBar("toolbar");
 
     act_file_new = new QAction(QString("新建"));
     act_file_open = new QAction(QString("打开"));
     act_file_save = new QAction(QString("保存"));
     act_file_saveAs = new QAction(QString("保存为"));
+    act_file_new->setShortcuts(QKeySequence::New);
+//    act_file_new->setToolTip("something");
+    act_file_new->setStatusTip("new a file");
 
     this->addMenu(menu_file);
     menu_file->addAction(act_file_new);
     menu_file->addAction(act_file_open);
     menu_file->addAction(act_file_save);
     menu_file->addAction(act_file_saveAs);
+
+
+//    QPushButton *button_new = new QPushButton(tr("新建"));
+//    QPushButton *button_save = new QPushButton(tr("保存"));
+//    button_new->setIcon(QIcon("/work/csz/imagePro/jobResult/4.jpg"));
+
+//    QHBoxLayout *hlay = new QHBoxLayout();
+//    hlay->addWidget(button_new);
+//    hlay->addWidget(button_save);
+////    toolbar->addAction(act_file_new);
+
+//    QWidget *barWidget = new QWidget(mainWindow);
+//    barWidget->setLayout(hlay);
+
+
+    // toolbar init
+    toolbar = new QToolBar("toolbar");
+    act_file_new->setIcon(QIcon::fromTheme("image-new", QIcon("/work/csz/imagePro/jobResult/4.jpg")));
+    toolbar->addAction(act_file_new);
+    toolbar->addAction(act_file_open);
+    toolbar->addAction(act_file_save);
+    toolbar->addAction(act_file_saveAs);
+//    toolbar->addWidget(barWidget);
+
+    mainWindow->addToolBar(toolbar);
 
     connect(act_file_open, SIGNAL(triggered()), this, SLOT(fileOpen()));
     connect(act_file_new, &QAction::triggered, this, &MenuBar::fileNew);
