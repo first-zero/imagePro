@@ -63,7 +63,9 @@ void MainWindow::init() {
 //    splitDockWidget(dock_output, dock_image, Qt::Vertical);
     splitDockWidget(dock_tool, dock_image, Qt::Horizontal);
     splitDockWidget(dock_image, dock_geom, Qt::Horizontal);
-    splitDockWidget(dock_image, dock_output, Qt::Vertical);
+//    splitDockWidget(dock_image, dock_output, Qt::Vertical);
+    splitDockWidget(dock_tool, dock_output, Qt::Vertical);
+    splitDockWidget(dock_geom, dock_output, Qt::Vertical);
 
     // 尝试2
 //    splitDockWidget(dock_tool, dock_geom, Qt::Horizontal);
@@ -74,25 +76,67 @@ void MainWindow::init() {
 
 void MainWindow::createToolDock() {
     dock_tool = new QDockWidget("绘图栏", this);
-//    dock_tool = new QDockWidget("工具箱", this);
+    dock_tool->setFeatures(QDockWidget::DockWidgetClosable);
 
     QWidget *widget = new QWidget(dock_tool);
 
-    QPushButton* button1 = new QPushButton("button1", widget);
-    QPushButton* button2 = new QPushButton("button2", widget);
-    button1->setToolTip("button1");
-    button2->setToolTip("button1");
-    button1->setFixedSize(60,40);
-    button2->setFixedSize(60,40);
+    QPushButton* button_pen = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
+                                                    "pen", this);
+    QPushButton* button_line = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
+                                                    "line", this);
+    QPushButton* button_ellipse = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
+                                                    "ellipse", this);
+    QPushButton* button_circle = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
+                                                    "circle", this);
+    QPushButton* button_triangle = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
+                                                    "triangle", this);
+    QPushButton* button_rhombus = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
+                                                    "rhombus", this);
+    QPushButton* button_rect = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
+                                                    "rect", this);
+    QPushButton* button_square = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
+                                                    "square", this);
+    QPushButton* button_hexagon = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
+                                                    "hexagon", this);
+
+//    button_pen->setFixedSize(35, 35);
+//    button_pen->setObjectName("customButton");
+
+    button_pen->setToolTip("铅笔");
 //    QGridLayout *gridlay = new QGridLayout(widget);
 //    gridlay->addWidget(button1, 0, 0, 1, 1);
 //    gridlay->addWidget(button2, 0, 1, 1, 1);
-    QHBoxLayout *hlay = new QHBoxLayout(widget);
-    hlay->addWidget(button1);
-    hlay->addWidget(button2);
-    widget->setLayout(hlay);
+    QGridLayout *gridlay = new QGridLayout();
+    gridlay->setAlignment(Qt::AlignTop);
+    gridlay->addWidget(button_pen, 0, 0);
+    gridlay->addWidget(button_line, 0, 1);
+    gridlay->addWidget(button_ellipse, 1, 0);
+    gridlay->addWidget(button_circle, 1, 1);
+    gridlay->addWidget(button_triangle, 2, 0);
+    gridlay->addWidget(button_rhombus, 2, 1);
+    gridlay->addWidget(button_rect, 3, 0);
+    gridlay->addWidget(button_square, 3, 1);
+    gridlay->addWidget(button_hexagon, 4, 0);
 
+    QButtonGroup *toolbuttonGroup = new QButtonGroup();
+    toolbuttonGroup->addButton(button_pen, 1);
+    toolbuttonGroup->addButton(button_line, 2);
+    toolbuttonGroup->addButton(button_ellipse, 3);
+    toolbuttonGroup->addButton(button_circle, 4);
+    toolbuttonGroup->addButton(button_triangle, 5);
+    toolbuttonGroup->addButton(button_rhombus, 6);
+    toolbuttonGroup->addButton(button_rect, 7);
+    toolbuttonGroup->addButton(button_square, 8);
+    toolbuttonGroup->addButton(button_hexagon, 9);
+    QList<QAbstractButton *> buttons = toolbuttonGroup->buttons();
+    foreach(QAbstractButton *button, buttons) {
+        button->setFixedSize(35, 35);
+        button->setObjectName("customButton");
+
+    }
+    widget->setLayout(gridlay);
     dock_tool->setWidget(widget);
+
 }
 void MainWindow::createImageWidget() {
     // 没有this，则不是绑定在mainWindow上
@@ -103,47 +147,31 @@ void MainWindow::createImageWidget() {
 //    dock_image->setFeatures(QDockWidget::AllDockWidgetFeatures);
 //    dock_image->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 //    dock_image->setGeometry(500, 0, 400, 400);
-//    dock_image->setFixedWidth(200);
-//    dock_image->setFixedHeight(200);
-//    dock_image->setMinimumHeight(500);
 
-//    dock_image->resize(700,700);
+    imageLabel = new PaintWidget(dock_image, this);
+    QImage img = QImage(500, 500, QImage::Format_RGB888);
+    img.fill(qRgb(255, 255, 255));
+    imageLabel->setPenWidth(2);
+    imageLabel->setPenColor(Qt::black);
+    imageLabel->setImage(img);
+//    imageLabel->setPixmap(QPixmap::fromImage(img));
+    imageLabel->resize(img.width(), img.height());
 
-    imageWidget = new ImageWidget(dock_image, this);
-
-//    QImage *img = new QImage(500, 500, QImage::Format_RGB888);
-//    img->fill(Qt::blue);
-//    imageWidget->setImage(*img);
-
+\
 
 
 
     // QLabel 设置位置
 //    lb->setGeometry(30, 30, 100, 30);
 
-//    *lb = new QLabel(this);
-//    lb->setAlignment(Qt::AlignCenter);
-
-//    *image = new QImage(300, 300, QImage::Format_RGB888);
-//    img->fill(0);
-//    lb->clear();
-//    lb->setPixmap(QPixmap::fromImage(*img));
-//    lb->setScaledContents(true);
-
-//    lb->resize(img->width(), img->height());
-
-
-//    a->addWidget(lb);
-//    imageWidget->setLayout(a);
-
-    //    dock_image->setLayout(a);
     // 使用 dock_image.setWidget imageWidget，能解决窗口重叠问题,但窗口大小也有问题
     // 使用QScrollArea尝试
-    QScrollArea *imgSrcollArea = new QScrollArea();
-    imgSrcollArea->setBackgroundRole(QPalette::Dark);
-    imgSrcollArea->setAlignment(Qt::AlignCenter);
-    imgSrcollArea->setWidget(imageWidget);
-    dock_image->setWidget(imgSrcollArea);
+    imgScrollArea = new QScrollArea();
+    imgScrollArea->setBackgroundRole(QPalette::Dark);
+    imgScrollArea->setAlignment(Qt::AlignCenter);
+    imgScrollArea->setWidget(imageLabel);
+    dock_image->setWidget(imgScrollArea);
+
 
 //        dock_image->setWidget(imageWidget);
 //    dock_image->setWidget(imageWidget->imageLabel);
@@ -154,7 +182,7 @@ void MainWindow::createImageWidget() {
 void MainWindow::createOutputDock() {
     dock_output = new QDockWidget("输出", this);
     dock_output->adjustSize();
-    dock_output->setFeatures(QDockWidget::DockWidgetMovable); //指定停靠窗体的样式，此处为可移动
+//    dock_output->setFeatures(QDockWidget::DockWidgetMovable); //指定停靠窗体的样式，此处为可移动
     dock_output->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
 //    int wid = this->size().width();
@@ -227,12 +255,21 @@ void MainWindow::insertToOutputEdit(QString text) {
 }
 
 void MainWindow::setImage(QImage img) {
-    imageWidget->setImage(img);
+    image = img;
+    imageLabel->setImage(img);
 }
 QImage MainWindow::getImage() {
-    return imageWidget->getImage();
+    return imageLabel->getImage();
+
 }
 
+void MainWindow::setPixmap(QPixmap map) {
+    imageLabel->setPixmap(map);
+}
+
+QDockWidget* MainWindow::getDock_Image() {
+    return dock_image;
+}
 MainWindow::~MainWindow()
 {
 

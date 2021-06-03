@@ -39,14 +39,16 @@ SOURCES += \
     MenuBar.cpp \
     imagewidget.cpp \
     geom.cpp \
-    imagechange.cpp
+    imagechange.cpp \
+    paintwidget.cpp
 
 HEADERS += \
         mainwindow.h \
     MenuBar.h \
     imagewidget.h \
     geom.h \
-    imagechange.h
+    imagechange.h \
+    paintwidget.h
 
 FORMS += \
         mainwindow.ui

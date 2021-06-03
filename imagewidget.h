@@ -5,6 +5,10 @@
 #include <QLabel>
 #include <QPainter>
 #include <mainwindow.h>
+#include "paintwidget.h"
+#include <QScrollArea>
+#include <QDockWidget>
+
 class MainWindow;
 
 class ImageWidget : public QWidget
@@ -29,7 +33,8 @@ protected:
 private:
     MainWindow* mainWindow;
     QImage image;
-    QLabel *imageLabel;
+    PaintWidget *imageLabel;
+    QScrollArea *imgSrcollArea;
     QPainter* painter;
     QPen pen;
     Shape shape;

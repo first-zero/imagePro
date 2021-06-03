@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QTextEdit>
+#include <QScrollArea>
+#include "PaintWidget.h"
 
 class MenuBar;
 class ImageWidget;
@@ -23,18 +25,26 @@ public:
     QImage getImage();
     void insertToOutputEdit(QString text);
     QString getOutputEditText();
+    QDockWidget* getDock_Image();
+    void setPixmap(QPixmap map);
+    PaintWidget *imageLabel;
+
+protected:
+
 private:
     Ui::MainWindow *ui;
     MenuBar* menuBar;
     QDockWidget* dock_image, *dock_output, *dock_geom, *dock_tool;
     ImageWidget *imageWidget;
+    QScrollArea *imgScrollArea;
     QTextEdit * outputEdit;
-    QImage* image;
+    QImage image;
     void init();
     void createImageWidget();
     void createOutputDock();
     void createGemoDock();
     void createToolDock();
+
 };
 
 #endif // MAINWINDOW_H

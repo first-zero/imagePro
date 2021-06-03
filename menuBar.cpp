@@ -79,11 +79,15 @@ void MenuBar::fileNew() {
     }
 
     fileName.clear();
-    QImage img = QImage(600, 600, QImage::Format_RGB888);
-    img.fill(Qt::white);
-    mainWindow->setImage(img);
+    image = QImage(600, 600, QImage::Format_RGB888);
+    image.fill(Qt::white);
+//    image.load("d:/work/csz/imagePro/jobResult/result1.png");
+    // 使用set 不会立刻刷新
+    mainWindow->setImage(image);
+//    mainWindow->setPixmap(QPixmap::fromImage(image));
+//    mainWindow->imageLabel->setPixmap(QPixmap::fromImage(image));
 
-
+    update();
 }
 void MenuBar::fileOpen() {
 
@@ -98,16 +102,6 @@ void MenuBar::fileOpen() {
         mainWindow->insertToOutputEdit(tr("文件名为空，读取失败"));
         return;
     }
-//    if(file.open(QIODevice::ReadOnly))
-//    {
-//           QByteArray byteArray  = file.readAll();
-//           std::vector<char> data(byteArray.data(),byteArray.data()+ byteArray.size());
-//           src = cv::imdecode(cv::Mat(data),1);
-//           file.close();
-//     }
-//    if (src.empty()) {
-//        QMessageBox::information(this, tr("错误"), tr("打开图像失败!"));
-//    }
 
     image = QImage();
     image.load(fileName);
