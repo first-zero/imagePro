@@ -1,17 +1,22 @@
-#ifndef GEMO_H
+﻿#ifndef GEMO_H
 #define GEMO_H
 #include <QDockWidget>
+#include "imagechange.h"
+#include "opencv2/highgui.hpp"
+using namespace cv;
 
 class MainWindow;
-class Geom : public QDockWidget
+class Geom
 {
-    Q_OBJECT
 public:
-    Geom(QWidget* parent, MainWindow* win);
+    Geom();
     ~Geom();
-    void init();
+    QImage scale(double rateW,double rateH, QImage image);
 private:
+
+    void init();
     MainWindow* mainWindow;
+    ImageChange *imageUtils;
 };
 
 

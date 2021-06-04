@@ -4,15 +4,18 @@
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/opencv.hpp"
-
+#include <QVector>
+#include <QRgb>
+#include <QDebug>
 using namespace cv;
 
 
-class imageChange
+class ImageChange
 {
 public:
-    imageChange();
+    ImageChange();
     Mat convertQImageToMat(QImage img);
+    QImage convertMatToQImage(Mat matImage);
 
 };
 

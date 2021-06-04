@@ -98,6 +98,8 @@ void MainWindow::createToolDock() {
                                                     "square", this);
     QPushButton* button_hexagon = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
                                                     "hexagon", this);
+    QPushButton* button_choose = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
+                                                    "choose", this);
 
 //    button_pen->setFixedSize(35, 35);
 //    button_pen->setObjectName("customButton");
@@ -117,8 +119,9 @@ void MainWindow::createToolDock() {
     gridlay->addWidget(button_rect, 3, 0);
     gridlay->addWidget(button_square, 3, 1);
     gridlay->addWidget(button_hexagon, 4, 0);
+    gridlay->addWidget(button_choose, 4, 1);
 
-    QButtonGroup *toolbuttonGroup = new QButtonGroup();
+    toolbuttonGroup = new QButtonGroup();
     toolbuttonGroup->addButton(button_pen, 1);
     toolbuttonGroup->addButton(button_line, 2);
     toolbuttonGroup->addButton(button_ellipse, 3);
@@ -128,12 +131,16 @@ void MainWindow::createToolDock() {
     toolbuttonGroup->addButton(button_rect, 7);
     toolbuttonGroup->addButton(button_square, 8);
     toolbuttonGroup->addButton(button_hexagon, 9);
+    toolbuttonGroup->addButton(button_choose, 10);
     QList<QAbstractButton *> buttons = toolbuttonGroup->buttons();
     foreach(QAbstractButton *button, buttons) {
         button->setFixedSize(35, 35);
         button->setObjectName("customButton");
 
     }
+
+    connect(toolbuttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(toolButtonClicked(int)));
+
     widget->setLayout(gridlay);
     dock_tool->setWidget(widget);
 
@@ -222,6 +229,8 @@ void MainWindow::createGemoDock() {
     dock_geom->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     dock_image->setFeatures(QDockWidget::AllDockWidgetFeatures);
 
+    geomClass = new Geom;
+
 // 设定 fixedwidth 就无法手动拖拽窗口大小
 //    dock_geom->setFixedWidth(400);
 //    dock_geom->setFixedHeight(400);
@@ -262,11 +271,43 @@ QImage MainWindow::getImage() {
     return imageLabel->getImage();
 
 }
+void MainWindow::scale(double rateH, double rateW) {
+//    geomClass
+//    insertToOutputEdit("scale processing");
+
+    image = geomClass->scale(rateH, rateW, image);
+    setImage(image);
+}
 
 void MainWindow::setPixmap(QPixmap map) {
     imageLabel->setPixmap(map);
 }
+void MainWindow::toolButtonClicked(int id) {
+    QList<QAbstractButton*> buttons = toolbuttonGroup->buttons();
 
+    foreach(QAbstractButton *button, buttons) {
+        if(toolbuttonGroup->button(id) != button) {
+            button->setChecked(false);
+            button->setStyleSheet("background-color:transparent");
+        }
+        else {
+            drawType = id;
+            button->setStyleSheet("background: rgb(76, 242, 255)");
+        }
+    }
+    switch(drawType) {
+    case 0:
+        imageLabel->setShape(PaintWidget::Null);
+        break;
+    case 1:
+        imageLabel->setShape(PaintWidget::Pen);
+        break;
+    case 10:
+        imageLabel->setShape(PaintWidget::Choose);
+        insertToOutputEdit("use choose");
+        break;
+    }
+}
 QDockWidget* MainWindow::getDock_Image() {
     return dock_image;
 }

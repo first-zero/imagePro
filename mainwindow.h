@@ -5,9 +5,13 @@
 #include <QTextEdit>
 #include <QScrollArea>
 #include "PaintWidget.h"
+#include "geom.h"
+#include <QButtonGroup>
 
 class MenuBar;
 class ImageWidget;
+class Geom;
+class PaintWidget;
 
 namespace Ui {
 class MainWindow;
@@ -27,7 +31,12 @@ public:
     QString getOutputEditText();
     QDockWidget* getDock_Image();
     void setPixmap(QPixmap map);
+
     PaintWidget *imageLabel;
+
+public slots:
+    void scale(double , double);
+    void toolButtonClicked(int id);
 
 protected:
 
@@ -37,8 +46,12 @@ private:
     QDockWidget* dock_image, *dock_output, *dock_geom, *dock_tool;
     ImageWidget *imageWidget;
     QScrollArea *imgScrollArea;
+    Geom *geomClass;
     QTextEdit * outputEdit;
     QImage image;
+    QButtonGroup *toolbuttonGroup;
+    int drawType;
+
     void init();
     void createImageWidget();
     void createOutputDock();

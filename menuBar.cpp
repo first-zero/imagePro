@@ -20,10 +20,27 @@ MenuBar::MenuBar(QWidget* parent, MainWindow* win) :
     QMenuBar(parent)
 {
     mainWindow = win;
+    imageUtils = new ImageChange;
     init();
 }
 
 void MenuBar::init() {
+    menuFileInit();
+    menuGeomInit();
+}
+void MenuBar::menuGeomInit() {
+    menu_geom = new QMenu();
+    menu_geom->setTitle("几何变换");
+    act_geom_scaleBig = new QAction(QString("放大"));
+    act_geom_scaleSmall = new QAction(QString("缩小"));
+
+    this->addMenu(menu_geom);
+    menu_geom->addAction(act_geom_scaleBig);
+    menu_geom->addAction(act_geom_scaleSmall);
+    connect(act_geom_scaleBig, SIGNAL(triggered()), this, SLOT(geomScaleBig()) );
+    connect(act_geom_scaleSmall, SIGNAL(triggered()), this, SLOT(geomScaleSmall()) );
+}
+void MenuBar::menuFileInit() {
     menu_file = new QMenu();
     menu_file->setTitle("文件");
 
@@ -102,12 +119,25 @@ void MenuBar::fileOpen() {
         mainWindow->insertToOutputEdit(tr("文件名为空，读取失败"));
         return;
     }
+//    Mat src;
+//    QFile file(fileName);
+//    if(file.open(QIODevice::ReadOnly)) {
+//        QByteArray byteArray = file.readAll();
+//        std::vector<char> data(byteArray.data(), byteArray.data() + byteArray.size());
+//        src = cv::imdecode(Mat(data), 1);
+//        file.close();
+//    }
+// ss
 
     image = QImage();
     image.load(fileName);
+    image = image.convertToFormat(QImage::Format_RGB888);
     if(image.data_ptr() == nullptr) {
         QMessageBox::information(this, tr("错误"), tr("打开图像失败！"));
     }
+
+//    Mat mat = imageUtils->convertQImageToMat(image);
+//    image = imageUtils->convertMatToQImage(mat);
     mainWindow->setImage(image);
 
     mainWindow->insertToOutputEdit(QString("open file, file path is %1").arg(fileName));
@@ -151,6 +181,12 @@ void MenuBar::fileSaveAs() {
 
 }
 
+void MenuBar::geomScaleBig() {
+    mainWindow->scale(2, 2);
+}
+void MenuBar::geomScaleSmall() {
+    mainWindow->scale(0.5, 0.5);
+}
 
 bool MenuBar::checkSave() {
     return true;
