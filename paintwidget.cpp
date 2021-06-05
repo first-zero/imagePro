@@ -65,21 +65,16 @@ void PaintWidget::mouseMoveEvent(QMouseEvent *e) {
     }
 }
 void PaintWidget::wheelEvent(QWheelEvent *e) {
+    if(type != PaintWidget::Choose)
+        return;
 //    e->pos(); e->delta();
     //  正向，远离用户为1 ， 负向靠近用户为0
 //    QPoint numDegrees = event->angleDelta() / 8;
     int way= e->angleDelta().y() > 0? 1:-1;
 
-    double ratePer = 0.4;
+    double ratePer = 0.5;
 
     double rate = 1 + way * ratePer;
-//    rate = 0.8;
-
-//    Mat matImg = imageUtils->convertQImageToMat(image);
-//    double rateW = rate, rateH = rate;
-//    Mat matDst = Mat(matImg.cols * rateW, matImg.rows * rateH, matImg.type(), Scalar::all(0));
-//    cv::resize(matImg, matDst, Size(static_cast<int>(matImg.cols * rateW),
-//                                static_cast<int>(matImg.rows * rateH)), rateW, rateH );
 
     mainWindow->scale(rate, rate);
 
@@ -114,7 +109,7 @@ void PaintWidget::paint(QImage img)
 //    p.drawEllipse(100, 100, 400, 400);
 //    p.drawEllipse(50, 50, 500, 500);
     image = img;
-    mainWindow->insertToOutputEdit(tr("check format in paint() %d").arg(image.format()) );
+//    mainWindow->insertToOutputEdit(tr("check format in paint() %d").arg(image.format()) );
     update();
 
 }

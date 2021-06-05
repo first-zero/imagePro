@@ -26,6 +26,7 @@ MenuBar::MenuBar(QWidget* parent, MainWindow* win) :
 
 void MenuBar::init() {
     menuFileInit();
+    menuEditInit();
     menuGeomInit();
 }
 void MenuBar::menuGeomInit() {
@@ -105,6 +106,19 @@ void MenuBar::fileNew() {
 //    mainWindow->imageLabel->setPixmap(QPixmap::fromImage(image));
 
     update();
+}
+void MenuBar::menuEditInit() {
+    menu_edit = new QMenu();
+    menu_edit->setTitle("编辑");
+    act_edit_undo = new QAction(QString("撤销"));
+    act_edit_redo = new QAction(QString("重做"));
+    this->addMenu(menu_edit);
+    menu_edit->addAction(act_edit_undo);
+    menu_edit->addAction(act_edit_redo);
+    connect(act_edit_undo, SIGNAL(triggered()), this, SLOT(geomScaleBig()) );
+    connect(act_edit_redo, SIGNAL(triggered()), this, SLOT(geomScaleBig()) );
+
+
 }
 void MenuBar::fileOpen() {
 

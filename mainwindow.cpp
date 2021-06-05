@@ -284,13 +284,23 @@ void MainWindow::setPixmap(QPixmap map) {
 }
 void MainWindow::toolButtonClicked(int id) {
     QList<QAbstractButton*> buttons = toolbuttonGroup->buttons();
+    // 上一次使用的是pen，然后再点击按钮时，保存。
+    if(drawType == PaintWidget::Pen)
+        setImage(imageLabel->getImage());
 
     foreach(QAbstractButton *button, buttons) {
+
         if(toolbuttonGroup->button(id) != button) {
             button->setChecked(false);
             button->setStyleSheet("background-color:transparent");
         }
         else {
+            if(drawType == id) {
+                button->setChecked(false);
+                button->setStyleSheet("background-color:transparent");
+                imageLabel->setShape(PaintWidget::Null);
+                return;
+            }
             drawType = id;
             button->setStyleSheet("background: rgb(76, 242, 255)");
         }
