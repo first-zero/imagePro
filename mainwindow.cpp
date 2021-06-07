@@ -74,7 +74,11 @@ void MainWindow::init() {
 
 }
 
+// 定义 pen, line, ellipse, circle, triangle, rhombus, rect, square, hexagon, choose
+//      1       2   3       4       5           6       7       8      9        10
 void MainWindow::createToolDock() {
+    // init drawType
+    drawType = -1;
     dock_tool = new QDockWidget("绘图栏", this);
     dock_tool->setFeatures(QDockWidget::DockWidgetClosable);
 
@@ -156,7 +160,7 @@ void MainWindow::createImageWidget() {
 //    dock_image->setGeometry(500, 0, 400, 400);
 
     imageLabel = new PaintWidget(dock_image, this);
-    QImage img = QImage(500, 500, QImage::Format_RGB888);
+    QImage img = QImage(600, 600, QImage::Format_RGB888);
     img.fill(qRgb(255, 255, 255));
     imageLabel->setPenWidth(2);
     imageLabel->setPenColor(Qt::black);
@@ -230,7 +234,7 @@ void MainWindow::createGemoDock() {
     dock_image->setFeatures(QDockWidget::AllDockWidgetFeatures);
 
     geomClass = new Geom;
-
+    dock_geom->setMaximumWidth(300);
 // 设定 fixedwidth 就无法手动拖拽窗口大小
 //    dock_geom->setFixedWidth(400);
 //    dock_geom->setFixedHeight(400);
@@ -282,6 +286,8 @@ void MainWindow::scale(double rateH, double rateW) {
 void MainWindow::setPixmap(QPixmap map) {
     imageLabel->setPixmap(map);
 }
+
+// 绘图按钮点击事件
 void MainWindow::toolButtonClicked(int id) {
     QList<QAbstractButton*> buttons = toolbuttonGroup->buttons();
     // 上一次使用的是pen，然后再点击按钮时，保存。
@@ -299,22 +305,63 @@ void MainWindow::toolButtonClicked(int id) {
                 button->setChecked(false);
                 button->setStyleSheet("background-color:transparent");
                 imageLabel->setShape(PaintWidget::Null);
+                drawType = 0;
                 return;
             }
             drawType = id;
             button->setStyleSheet("background: rgb(76, 242, 255)");
         }
     }
+    // 定义 pen, line, ellipse, circle, triangle, rhombus, rect, square, hexagon, choose
+    //      1       2   3       4       5           6       7       8      9        10
+//    QString toolBoxIndex[11] = {tr("Null"), tr("pen"), tr("line"), tr("ellipse"), tr("circle"), tr("triangle"),
+//                    tr("rhombus"), tr("rect"), tr("square"), tr("hexagon"), tr("choose") };
+//    imageLabel->setShape(tr("PaintWidget::") + toolBoxIndex[drawType]);
+//    insertToOutputEdit(tr("使用绘图工具：") + toolBoxIndex[drawType]);
     switch(drawType) {
     case 0:
         imageLabel->setShape(PaintWidget::Null);
+        insertToOutputEdit(tr("退出绘制模式"));
         break;
     case 1:
         imageLabel->setShape(PaintWidget::Pen);
+        insertToOutputEdit(tr("使用绘图工具：铅笔"));
+        break;
+    case 2:
+        imageLabel->setShape(PaintWidget::Line);
+        insertToOutputEdit(tr("使用绘图工具：线"));
+        break;
+    case 3:
+        imageLabel->setShape(PaintWidget::Ellipse);
+        insertToOutputEdit(tr("使用绘图工具：椭圆"));
+        break;
+    case 4:
+        imageLabel->setShape(PaintWidget::Circle);
+        insertToOutputEdit(tr("使用绘图工具：圆"));
+        break;
+    case 5:
+        imageLabel->setShape(PaintWidget::Triangle);
+        insertToOutputEdit(tr("使用绘图工具：三角形"));
+        break;
+    case 6:
+        imageLabel->setShape(PaintWidget::Rhombus);
+        insertToOutputEdit(tr("使用绘图工具：菱形"));
+        break;
+    case 7:
+        imageLabel->setShape(PaintWidget::Rect);
+        insertToOutputEdit(tr("使用绘图工具：矩形"));
+        break;
+    case 8:
+        imageLabel->setShape(PaintWidget::Square);
+        insertToOutputEdit(tr("使用绘图工具：正方形"));
+        break;
+    case 9:
+        imageLabel->setShape(PaintWidget::Hexagon);
+        insertToOutputEdit(tr("使用绘图工具：六边形"));
         break;
     case 10:
         imageLabel->setShape(PaintWidget::Choose);
-        insertToOutputEdit("use choose");
+        insertToOutputEdit("使用缩放工具");
         break;
     }
 }

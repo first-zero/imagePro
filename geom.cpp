@@ -21,12 +21,13 @@ QImage Geom::scale(double rateW, double rateH, QImage image) {
 
 
     // 需要构建 4个倍数大小的图像
-        int col = matImg.cols * rateW;
-        int row = matImg.rows * rateW;
+//    if(rateW == rateW) {
+    int col = matImg.cols * rateW;
+    int row = matImg.rows * rateH;
 
     if(rateW > 1) {
         // INTER_LINEAR
-    resize(matImg, matDst, Size(static_cast<int>(col - col%4 + 4*(col & 0x01) ),
+        resize(matImg, matDst, Size(static_cast<int>(col - col%4 + 4*(col & 0x01) ),
                                 static_cast<int>(row) - (row%4 + 4*(row & 0x01)  )), 0, 0,INTER_CUBIC);
     }
     if(rateW < 1) {

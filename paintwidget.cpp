@@ -7,7 +7,8 @@ PaintWidget::PaintWidget(QWidget *parent, MainWindow *win) : QLabel(parent)
     isDrawing = false;
     isMoving = false;
     isCutting = false;
-    type = -1;
+    type = Null;
+    lastPoint = endPoint = QPoint(0, 0);
     mainWindow = win;
     geomClass = new Geom;
     setAlignment(Qt::AlignCenter);
@@ -18,7 +19,9 @@ void PaintWidget::setShape(int shape) {
 }
 QImage PaintWidget::getImage()
 {
-    return image;
+    if(image.isNull()!= true)
+        return image;
+    return QImage();
 }
 
 void PaintWidget::setImage(QImage img)
@@ -34,8 +37,11 @@ void PaintWidget::paintEvent(QPaintEvent *)
     update();
     QPainter painter(this);
     resize(image.size());
-
-    painter.drawImage(0, 0, image);
+    if(isDrawing == true) {
+        painter.drawImage(0, 0, tempImage);
+    } else {
+        painter.drawImage(0, 0, image);
+    }
     show();
 
 }
@@ -49,6 +55,15 @@ void PaintWidget::mousePressEvent(QMouseEvent *e) {
 
 void PaintWidget::mouseReleaseEvent(QMouseEvent *e) {
     isDrawing = false;
+    isMoving = false;
+//    int x1, y1, x2, y2;
+//    x1 = lastPoint.x();
+    if(type != Pen && type != Null) {
+        paint(image);
+    }
+    // 暂且用mainwin setImage property
+    mainWindow->setImage(image);
+
 }
 
 void PaintWidget::mouseMoveEvent(QMouseEvent *e) {
@@ -60,6 +75,9 @@ void PaintWidget::mouseMoveEvent(QMouseEvent *e) {
 
         if(type == Pen) {
             paint(image);
+        }
+        else {
+            paint(tempImage);
         }
 
     }
@@ -83,13 +101,17 @@ void PaintWidget::wheelEvent(QWheelEvent *e) {
     paint(image);
 }
 
-void PaintWidget::paint(QImage img)
+// 必须使用引用，否则对img的修改，影响不到参数外
+void PaintWidget::paint(QImage& img)
 {
     QPainter p(&img);
     QPen apen;
     apen.setWidth(5);
     apen.setColor(Qt::red);
     p.setPen(apen);
+    int x1, x2, y1, y2;
+    x1 = lastPoint.x(); x2 = endPoint.x();
+    y1 = lastPoint.y(); y2 = endPoint.y();
 
     p.setRenderHint(QPainter::Antialiasing, true);
 
@@ -100,6 +122,32 @@ void PaintWidget::paint(QImage img)
         lastPoint = endPoint;
         break;
     }
+    case Ellipse:
+    {
+        p.drawEllipse(x1, y1, x2-x1, y2-y1);
+        break;
+    }
+    case Circle:
+    {
+        double length = (x2 - x1) >  (y2 - y1) ? (x2 - x1) : (y2 - y1);
+        p.drawEllipse(x1, y1, length, length);
+        break;
+    }
+    case Triangle:
+    {
+        int top, bottom, left, right;
+        top = (y1 < y2)? y1:y2;
+        bottom = (y1>y2)? y1:y2;
+        left = (y1<y2)? y1:y2;
+        right = (y1>y2)? y1:y2;
+        if(y1 < y2) {
+            QPoint points[3] = {QPoint(left, bottom), QPoint(right, bottom), QPoint((right+left)/2, top)};
+            p.drawPolygon(points, 3);
+        } else {
+            QPoint points[3] = {QPoint(left, top), QPoint(right, top), QPoint((right+left)/2, bottom)};
+        }
+        break;
+    }
     case Choose:
         break;
     }
@@ -108,8 +156,8 @@ void PaintWidget::paint(QImage img)
 //    p.drawLine(0, 0,  300, 300);
 //    p.drawEllipse(100, 100, 400, 400);
 //    p.drawEllipse(50, 50, 500, 500);
-    image = img;
 //    mainWindow->insertToOutputEdit(tr("check format in paint() %d").arg(image.format()) );
     update();
 
 }
+

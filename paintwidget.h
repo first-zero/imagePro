@@ -20,7 +20,7 @@ class PaintWidget : public QLabel
 public:
     explicit PaintWidget(QWidget *parent, MainWindow *win);
     enum shape {
-        Pen = 1, Line, Ellipse, Circle, Triangle, Rhomus,
+        Pen = 1, Line, Ellipse, Circle, Triangle, Rhombus,
         Rect, Square, Hexagon, Choose, Null};
 
     void setImage(QImage img);
@@ -40,7 +40,7 @@ public slots:
 private:
     MainWindow* mainWindow;
     QImage image, tempImage;
-    QPen apen;
+//    QPen apen;
     int penWidth;
     QColor penColor;
     QPoint lastPoint, endPoint;
@@ -52,7 +52,7 @@ private:
 
 
     void paintEvent(QPaintEvent *e);
-    void paint(QImage img);
+    void paint(QImage& img);
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
