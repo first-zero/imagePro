@@ -190,7 +190,10 @@ void MenuBar::fileSaveAs() {
         mainWindow->insertToOutputEdit(tr("保存图像成功，更新路径为：%1").arg(path));
         fileName = path;
         image.load(path);
+        image = image.convertToFormat(QImage::Format_RGB888);
+
         mainWindow->setImage(image);
+
     }
 
 }

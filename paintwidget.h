@@ -10,6 +10,7 @@
 #include "geom.h"
 #include "imagechange.h"
 #include "mainwindow.h"
+#include "opencv2/highgui.hpp"
 
 class MainWindow;
 class Geom;
@@ -39,7 +40,9 @@ public slots:
 
 private:
     MainWindow* mainWindow;
+    // image作为原图数据属性，tempImage作为画布缓冲数据，viewImage作为视图，作为原图缩放，修改的预览结果
     QImage image, tempImage;
+    QImage  viewImage;
 //    QPen apen;
     int penWidth;
     QColor penColor;
@@ -48,7 +51,7 @@ private:
     Geom *geomClass;
     ImageChange *imageUtils;
     int type;
-
+    double enlargeOrScaleRate;
 
 
     void paintEvent(QPaintEvent *e);

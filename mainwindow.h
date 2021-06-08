@@ -37,7 +37,8 @@ public:
 public slots:
     void scale(double , double);
     void toolButtonClicked(int id);
-
+    void saveImageData();
+    void cancelImageData();
 protected:
 
 private:

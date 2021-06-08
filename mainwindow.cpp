@@ -104,6 +104,10 @@ void MainWindow::createToolDock() {
                                                     "hexagon", this);
     QPushButton* button_choose = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
                                                     "choose", this);
+    QPushButton* button_save = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
+                                                    "save", this);
+    QPushButton* button_cancel = new QPushButton(QIcon("./image/toolbox/painbrush.png"),
+                                                    "cancel", this);
 
 //    button_pen->setFixedSize(35, 35);
 //    button_pen->setObjectName("customButton");
@@ -125,6 +129,10 @@ void MainWindow::createToolDock() {
     gridlay->addWidget(button_hexagon, 4, 0);
     gridlay->addWidget(button_choose, 4, 1);
 
+
+    gridlay->addWidget(button_save, 5, 0,1,2);
+    gridlay->addWidget(button_cancel, 6, 0, 1, 2);
+
     toolbuttonGroup = new QButtonGroup();
     toolbuttonGroup->addButton(button_pen, 1);
     toolbuttonGroup->addButton(button_line, 2);
@@ -144,6 +152,8 @@ void MainWindow::createToolDock() {
     }
 
     connect(toolbuttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(toolButtonClicked(int)));
+    connect(button_save, SIGNAL(clicked(bool)), this, SLOT(saveImageData()));
+    connect(button_cancel, SIGNAL(clicked(bool)), this, SLOT(cancelImageData()));
 
     widget->setLayout(gridlay);
     dock_tool->setWidget(widget);
@@ -264,6 +274,9 @@ QString MainWindow::getOutputEditText() {
 
 void MainWindow::insertToOutputEdit(QString text) {
     outputEdit->insertPlainText(text + tr("\n"));
+    QTextCursor cursor = outputEdit->textCursor();
+    cursor.movePosition(QTextCursor::End);
+    outputEdit->setTextCursor(cursor);
 
 }
 
@@ -364,6 +377,13 @@ void MainWindow::toolButtonClicked(int id) {
         insertToOutputEdit("使用缩放工具");
         break;
     }
+}
+void MainWindow::saveImageData() {
+    image = imageLabel->getImage();
+    insertToOutputEdit(tr("saveImageData run successful"));
+}
+void MainWindow::cancelImageData() {
+    setImage(image);
 }
 QDockWidget* MainWindow::getDock_Image() {
     return dock_image;

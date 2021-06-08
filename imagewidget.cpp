@@ -57,7 +57,6 @@ void ImageWidget::init() {
     update();
 
 }
-
 void ImageWidget::setImage(QImage img) {
 
 

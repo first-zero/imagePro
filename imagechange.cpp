@@ -23,6 +23,7 @@ Mat ImageChange::convertQImageToMat(QImage image) {
         mat = Mat(image.height(), image.width(), CV_8UC1,
                   const_cast<uchar*>(image.bits()), image.bytesPerLine()).clone();
         break;
+
     default:
         qDebug() << "Image format is not supported depth=%d and %d format/n",
                 image.depth(), image.format();
@@ -35,7 +36,7 @@ QImage ImageChange::convertMatToQImage(Mat matImage) {
     int type = matImage.type();
     switch(type) {
     case CV_8UC1:
-        {
+    {
 //            image.setColorCount(256);
 //            image.setColor(i, qRgb(i, i, i));
 //            uchar *psrc = matImage.data;
@@ -44,25 +45,35 @@ QImage ImageChange::convertMatToQImage(Mat matImage) {
 //                memcpy(pdest, psrc, matImage.cols);
 //                psrc += matImage.step;
 //            }
-            static QVector<QRgb> colorTable;
-            if(colorTable.isEmpty()) {
-                for(int i=0; i<256; i++)
-                    colorTable.push_back(qRgb(i, i, i));
-            }
-            QImage image(matImage.cols, matImage.rows, QImage::Format_Indexed8);
-            image.setColorTable(colorTable);
-            return image.copy();
+        static QVector<QRgb> colorTable;
+        if(colorTable.isEmpty()) {
+            for(int i=0; i<256; i++)
+                colorTable.push_back(qRgb(i, i, i));
         }
-        case CV_8UC3:
-        {
-            const uchar *pchar = (const uchar*)matImage.data;
-            QImage image(pchar, matImage.cols, matImage.rows, QImage::Format_RGB888);
-            return image.rgbSwapped().copy();
-        }
-        default:
-            qDebug("Image format is not support:depth=%d and %d channels\n", matImage.depth(), matImage.channels());
+        QImage image(matImage.cols, matImage.rows, QImage::Format_Indexed8);
+        image.setColorTable(colorTable);
+        return image.copy();
+    }
+    case CV_8UC3:
+    {
+        const uchar *pchar = (const uchar*)matImage.data;
+        QImage image(pchar, matImage.cols, matImage.rows, QImage::Format_RGB888);
+        return image.rgbSwapped().copy();
+    }
+    case CV_8UC4:
+    {
+//        const uchar *pchar = (const uchar*) matImage.data;
+//        QImage image(pchar, matImage.cols, matImage.rows,
+//                     static_cast<qint32>(matImage.step),QImage::Format_ARGB32);
+        // ???
+//        return image.copy();
         break;
-        }
+    }
+    default:
+        qDebug("Image format is not support:depth=%d and %d channels\n", matImage.depth(), matImage.channels());
+    break;
+
+    }
 
     // QImage 和 cv::mat 颜色是不同的`
     return QImage();
